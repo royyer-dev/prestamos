@@ -99,15 +99,15 @@ class CatalogosController extends Controller
 
     public function empleadosPuestosGet(Request $request, $id_empleado)
     {
-        $puestos = Puesto::join("detalle_empleado_puesto", "puesto.id_puesto", "=", "detalle_empleado_puesto.id_puesto")
-            ->select("detalle_empleado_puesto.*", "puesto.nombre as puesto", "puesto.sueldo") // Corrección aquí
+        $detalleEmpleadoPuestos = Puesto::join("detalle_empleado_puesto", "puesto.id_puesto", "=", "detalle_empleado_puesto.id_puesto")
+            ->select("detalle_empleado_puesto.*", "puesto.nombre as puesto", "puesto.sueldo")
             ->where("detalle_empleado_puesto.id_empleado", "=", $id_empleado)
             ->get();
     
         $empleado = Empleado::find($id_empleado);
     
         return view('catalogos/empleadosPuestosGet', [
-            'puestos' => $puestos,
+            'detalle_empleado_puesto' => $detalleEmpleadoPuestos, // Cambiado 'puestos' a 'detalle_empleado_puesto'
             'empleado' => $empleado,
             "breadcrumbs" => [
                 "inicio" => url("/"),
@@ -152,20 +152,22 @@ class CatalogosController extends Controller
         return redirect("/empleados/{$id_empleado}/puestos");
     }
 
-    public function empleadosPrestamosGet(Request $request, $id_empleado)
+    public function empleadosPrestamosGet(Request $request, $id_empleado): View
     {
-    $prestamos = Prestamo::where('id_empleado', $id_empleado)->get();
-    $empleado = Empleado::find($id_empleado);
-    return view('catalogos/empleadosPrestamosGet', [
-        'prestamos' => $prestamos,
-        'empleado' => $empleado,
-        'breadcrumbs' => [
-            'Inicio' => url('/'),
-            'Empleados' => url('/empleados'),
-            'Prestamos' => url("/empleados/{$id_empleado}/prestamos")
-        ]
-    ]);
+        $empleado = Empleado::find($id_empleado);
+    
+        $prestamos = Prestamo::where("prestamo.id_empleado", $id_empleado)->get();
+    
+        return view('movimientos/empleadosPrestamosGet', [
+            "empleado" => $empleado,
+            "prestamos" => $prestamos,
+            "breadcrumbs" => [
+                "Inicio" => url("/"),
+                "Prestamos" => url("/movimientos/prestamos")
+            ]
+        ]);
     }
+    
     
     public function prestamosGet(): View
     {

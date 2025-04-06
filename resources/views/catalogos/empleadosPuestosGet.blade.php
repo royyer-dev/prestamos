@@ -24,12 +24,12 @@
     </tr>
 </thead>
 <tbody>
-@foreach($puestos as $puesto)
+@foreach($detalle_empleado_puesto as $detalle)
     <tr>
-        <td class="text-center">{{$puesto->id_det_emp_puesto}}</td>
-        <td class="text-center">{{$puesto->puesto}}</td>
-        <td class="text-center">{{$puesto->fecha_inicio}}</td>
-        <td class="text-center">{{$puesto->fecha_fin}}</td>
+        <td class="text-center">{{ $detalle->id_detalle }}</td>
+        <td class="text-center">{{ $detalle->puesto }}</td>
+        <td class="text-center">{{ $detalle->fecha_inicio }}</td>
+        <td class="text-center">{{ $detalle->fecha_fin }}</td>
     </tr>
 @endforeach
 </tbody>

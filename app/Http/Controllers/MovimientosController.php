@@ -142,7 +142,7 @@ class MovimientosController extends Controller
             'breadcrumbs' => [
                 "Inicio" => url("/"),
                 "Prestamos" => url("/movimientos/prestamos"),
-                "Abonos" => url("/prestamos/{$prestamo->id_prestamo}/abonos"),
+                "Abonos" => url("movimientos/prestamos/{$prestamo->id_prestamo}/abonos"),
                 "Agregar" => "",
             ]
         ]);
