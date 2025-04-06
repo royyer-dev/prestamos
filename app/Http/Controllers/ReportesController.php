@@ -50,42 +50,46 @@ class ReportesController extends Controller
 
     public function matrizAbonosGet(Request $request)
     {
-    // Establecer fechas por defecto (año actual)
-    $fecha_inicio = Carbon::now()->startOfYear()->format("Y-m-d");
-    $fecha_fin = Carbon::now()->endOfYear()->format("Y-m-d");
+        // Establecer fechas por defecto (año actual)
+        $fecha_inicio = Carbon::now()->startOfYear()->format("Y-m-d");
+        $fecha_fin = Carbon::now()->endOfYear()->format("Y-m-d");
     
-    // Obtener fechas del request si existen
-    $fecha_inicio = $request->query("fecha_inicio", $fecha_inicio);
-    $fecha_fin = $request->query("fecha_fin", $fecha_fin);
-
-    // Consulta base
-    $query = Abono::join("prestamo", "prestamo.id_prestamo", "=", "abono.id_prestamo")
-                ->join("empleado", "empleado.id_empleado", "=", "prestamo.id_empleado")
-                ->select(
-                    "prestamo.id_prestamo",
-                    "empleado.nombre",
-                    "abono.monto_cobrado",
-                    "abono.fecha"
-                )
-                ->whereBetween("abono.fecha", [$fecha_inicio, $fecha_fin])
-                ->orderBy("abono.fecha");
-
-    // Obtener resultados
-    $abonos = $query->get()->toArray();
-
-    // Formatear fechas a año-mes
-    foreach ($abonos as &$abono) {
-        $abono["fecha"] = Carbon::parse($abono["fecha"])->format("Y-m");
-    }
-
-    // Crear índice para la vista
-    $abonosIndex = new Index($abonos, ["id_prestamo", "fecha"]);
-
-    return view("reportes.matrizAbonosGet", [
-        "abonosIndex" => $abonosIndex,
-        "fecha_inicio" => $fecha_inicio,
-        "fecha_fin" => $fecha_fin,
-        "breadcrumbs" => []
-    ]);
+        // Obtener fechas del request si existen
+        $fecha_inicio = $request->query("fecha_inicio", $fecha_inicio);
+        $fecha_fin = $request->query("fecha_fin", $fecha_fin);
+    
+        // Consulta base
+        $query = Abono::join("prestamo", "prestamo.id_prestamo", "=", "abono.id_prestamo")
+            ->join("empleado", "empleado.id_empleado", "=", "prestamo.id_empleado")
+            ->select(
+                "prestamo.id_prestamo",
+                "empleado.nombre",
+                "abono.monto_cobrado",
+                "abono.fecha"
+            )
+            ->whereBetween("abono.fecha", [$fecha_inicio, $fecha_fin])
+            ->orderBy("abono.fecha");
+    
+        // Obtener resultados
+        $abonos = $query->get()->toArray();
+    
+        // Formatear fechas a año-mes
+        foreach ($abonos as &$abono) {
+            $abono["fecha"] = Carbon::parse($abono["fecha"])->format("Y-m");
+        }
+    
+        // Crear índice para la vista
+        $abonosIndex = new Index($abonos, ["id_prestamo", "fecha"]);
+    
+        return view("reportes.matrizAbonosGet", [
+            "abonosIndex" => $abonosIndex,
+            "fecha_inicio" => $fecha_inicio,
+            "fecha_fin" => $fecha_fin,
+            "breadcrumbs" => [
+                "Inicio" => url("/"),
+                "Reportes" => url("/reportes"), // O la URL de la página principal de reportes
+                "Matriz de Abonos" => null, // Indica la página actual
+            ]
+        ]);
     }
 }

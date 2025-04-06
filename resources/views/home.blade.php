@@ -40,7 +40,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Información del Estudiante</h5>
                     <p class="card-text">
-                        Nombre:<br>
+                        Nombre: Cesar Rogelio Corona Cortes<br>
                         Carrera: Ingeniería Informática <br>
                         Semestre: 6°
                     </p>
